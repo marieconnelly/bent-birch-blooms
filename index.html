@@ -917,7 +917,7 @@
 
   const API_ENDPOINT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? '/api/anthropic'
-    : 'https://api.anthropic.com/v1/messages';
+    : 'https://anthropic-zsfqxvndga-uc.a.run.app';
 
   async function callClaude(prompt, maxTokens=300) {
     const res = await fetch(API_ENDPOINT, {
