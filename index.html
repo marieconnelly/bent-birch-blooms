@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bent Birch Blooms</title>
+  <meta name="description" content="Farm tracker for Bent Birch Blooms dahlia farm">
+  <meta name="theme-color" content="#ffecd5">
+  <meta name="app-version" content="v3.12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Bent Birch">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Dancing+Script:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --oatmeal: #ffecd5;
+      --blossom: #cfa39b;
+      --blossom-deep: #9e6b62;
+      --peach: #f8a693;
+      --butter: #fadc98;
+      --late-summer: #f36f46;
+      --cranberry: #672e2d;
+      --cranberry-dark: #4a1f1e;
+      --oceanside: #2c454e;
+      --blue-sky: #c0e6f0;
+      --spritz: #fcbe8b;
+      --cream: #ffecd5;
+      --warm-white: #fff8f2;
+      --coral: #f36f46;
+      --coral-dark: #d4582e;
+      --brown: #672e2d;
+      --text: #3a1a19;
+      --text-muted: #8a5550;
+      --text-light: #b8908c;
+      --border: rgba(103,46,45,0.12);
+      --border-strong: rgba(103,46,45,0.25);
+      --shadow-lg: 0 8px 32px rgba(103,46,45,0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font-display: 'Josefin Sans', sans-serif;
+      --font-script: 'Dancing Script', cursive;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body { font-family: var(--font-body); background: var(--cream); color: var(--text); min-height: 100vh; min-height: -webkit-fill-available; overflow-x: hidden; }
+
+    #auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; background: var(--warm-white); }
+    .auth-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 0.25rem; }
+    .auth-bent-birch { font-family: var(--font-display); font-size: 2rem; color: var(--cranberry); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+    .auth-blooms { font-family: var(--font-script); font-size: 2.4rem; color: var(--blossom-deep); }
+    .auth-sub { font-size: 0.78rem; color: var(--text-light); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3rem; text-align: center; }
+    .auth-btn { display: flex; align-items: center; gap: 12px; background: var(--coral); color: white; border: none; border-radius: 50px; padding: 14px 28px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .auth-btn:active { transform: scale(0.98); background: var(--coral-dark); }
+
+    #app { display: none; flex-direction: column; height: 100vh; height: -webkit-fill-available; }
+
+    .app-header { background: var(--warm-white); border-bottom: 1px solid var(--border); padding: 0.875rem 1.25rem 0; flex-shrink: 0; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .header-title { display: flex; align-items: baseline; gap: 7px; }
+    .title-bent-birch { font-family: var(--font-display); font-size: 1.2rem; color: var(--cranberry); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+    .title-blooms { font-family: var(--font-script); font-size: 1.5rem; color: var(--blossom-deep); }
+    .header-date { font-size: 0.75rem; color: var(--text-light); }
+
+    .nav-tabs { display: flex; }
+    .nav-tab { flex: 1; background: none; border: none; padding: 0.7rem 0.25rem; font-family: var(--font-body); font-size: 0.88rem; font-weight: 400; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .nav-tab.active { color: var(--coral); border-bottom-color: var(--coral); font-weight: 500; }
+
+    .main-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5rem; }
+    .tab-panel { display: none; padding: 1.25rem; }
+    .tab-panel.active { display: block; }
+
+    .section-heading { font-size: 0.78rem; font-weight: 500; color: var(--coral); margin-bottom: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
+    .stat-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.875rem; text-align: center; }
+    .stat-val { font-family: var(--font-display); font-size: 2rem; color: var(--cranberry); line-height: 1; }
+    .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+    .weather-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 12px; }
+    .weather-icon { font-size: 1.4rem; }
+    .weather-info { flex: 1; }
+    .weather-temp { font-size: 0.92rem; font-weight: 500; color: var(--text); }
+    .weather-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
+    .weather-details { font-size: 0.72rem; color: var(--text-light); text-align: right; line-height: 1.6; }
+
+    .voice-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+    .voice-mode-row { display: flex; gap: 8px; margin-bottom: 0.75rem; }
+    .mode-btn { flex: 1; padding: 0.5rem; border: 1px solid var(--border-strong); border-radius: 50px; background: transparent; font-family: var(--font-body); font-size: 0.72rem; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+    .mode-btn.active { background: var(--cranberry); border-color: var(--cranberry); color: white; }
+
+    .voice-btn { width: 100%; border: none; border-radius: 50px; padding: 0.875rem 1.5rem; font-family: var(--font-body); font-size: 0.95rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; background: var(--coral); color: white; }
+    .voice-btn.listening { background: #c0392b; animation: pulse-btn 2s infinite; }
+    .voice-btn.processing { background: var(--blossom-deep); }
+    .voice-btn.bulk { background: var(--oceanside); }
+    @keyframes pulse-btn { 0%,100%{box-shadow:0 0 0 0 rgba(243,111,70,0.4)} 50%{box-shadow:0 0 0 12px rgba(243,111,70,0)} }
+
+    .transcript-display { margin-top: 0.875rem; padding: 0.75rem 1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--text-muted); font-style: italic; min-height: 44px; line-height: 1.5; }
+
+    .bulk-progress { margin-top: 0.75rem; display: none; }
+    .bulk-progress.visible { display: block; }
+    .progress-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 0.82rem; color: var(--text-muted); border-bottom: 0.5px solid var(--border); }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-pending { background: var(--text-light); }
+    .dot-loading { background: var(--butter); animation: pulse-dot 1s infinite; }
+    .dot-done { background: #3a6b3a; }
+    .dot-dupe { background: var(--late-summer); }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .entry-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.875rem 1rem; margin-bottom: 0.625rem; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start; }
+    .entry-variety { font-weight: 500; font-size: 0.92rem; color: var(--text); }
+    .entry-time { font-size: 0.7rem; color: var(--text-light); margin-top: 2px; }
+    .entry-notes { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .health-badge { display: inline-block; font-size: 0.65rem; padding: 2px 7px; border-radius: 20px; margin-top: 4px; font-weight: 500; }
+    .health-good { background: #e8f4e8; color: #3a6b3a; }
+    .health-concern { background: #fef3e2; color: #8a5a00; }
+    .entry-actions { display: flex; gap: 6px; margin-top: 6px; }
+    .action-btn { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border-strong); background: transparent; color: var(--text-muted); cursor: pointer; font-family: var(--font-body); }
+    .action-btn.delete { border-color: rgba(160,45,45,0.3); color: #a02d2d; }
+    .entry-stems { text-align: right; }
+    .stems-num { font-family: var(--font-display); font-size: 1.8rem; color: var(--coral); line-height: 1; }
+    .stems-label { font-size: 0.65rem; color: var(--text-light); }
+
+    .variety-detail-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.75rem; }
+    .variety-detail-header { display: flex; align-items: start; justify-content: space-between; margin-bottom: 0.875rem; }
+    .variety-detail-name { font-family: var(--font-script); font-size: 1.4rem; color: var(--cranberry); }
+    .variety-actions { display: flex; gap: 6px; align-items: center; }
+    .variety-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0.875rem; }
+    .spec-item { font-size: 0.78rem; }
+    .spec-label { color: var(--text-light); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 2px; }
+    .spec-val { color: var(--text); font-weight: 500; }
+    .variety-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+    .variety-footer-stems { font-size: 1.1rem; font-weight: 500; color: var(--coral); }
+    .retry-btn { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border-strong); background: transparent; color: var(--text-muted); cursor: pointer; font-family: var(--font-body); }
+
+    .variety-search-bar { display: flex; gap: 8px; margin-bottom: 1rem; align-items: center; }
+    .variety-search-input { flex: 1; border: 1px solid var(--border-strong); border-radius: 50px; padding: 0.6rem 1rem; font-family: var(--font-body); font-size: 0.88rem; color: var(--text); background: var(--warm-white); outline: none; transition: border-color 0.2s; }
+    .variety-search-input:focus { border-color: var(--coral); }
+    .variety-search-input::placeholder { color: var(--text-light); }
+    .letter-jump { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 1rem; }
+    .letter-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-strong); background: transparent; font-family: var(--font-body); font-size: 0.72rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-weight: 500; }
+    .letter-btn.has-varieties { background: var(--cream); color: var(--cranberry); border-color: var(--cranberry); }
+    .letter-btn:hover.has-varieties { background: var(--cranberry); color: white; }
+    .varieties-count { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+
+    .photo-upload-area { border: 2px dashed var(--border-strong); border-radius: var(--radius); padding: 1.5rem; text-align: center; background: var(--warm-white); margin-bottom: 1rem; cursor: pointer; }
+    .photo-upload-area p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
+    .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .photo-item { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); position: relative; }
+    .photo-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+    .photo-caption { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(58,26,25,0.75)); color: white; padding: 0.5rem 0.625rem; font-size: 0.7rem; }
+    .photo-delete { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 50%; background: rgba(58,26,25,0.6); color: white; border: none; font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+    .seed-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 0.75rem; }
+    .seed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem; }
+    .seed-name { font-weight: 500; font-size: 0.92rem; }
+    .seed-stage { font-size: 0.7rem; padding: 3px 9px; border-radius: 20px; background: var(--oatmeal); color: var(--cranberry); font-weight: 500; }
+    .seed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .seed-field { font-size: 0.78rem; }
+    .seed-field-label { color: var(--text-light); font-size: 0.68rem; margin-bottom: 1px; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(58,26,25,0.5); z-index: 200; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-sheet { background: var(--warm-white); border-radius: 20px 20px 0 0; padding: 1.5rem 1.25rem 2rem; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .modal-overlay.open .modal-sheet { transform: translateY(0); }
+    .modal-handle { width: 40px; height: 4px; background: var(--border-strong); border-radius: 2px; margin: 0 auto 1.25rem; }
+    .modal-title { font-family: var(--font-script); font-size: 1.4rem; color: var(--cranberry); margin-bottom: 1.25rem; }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.04em; margin-bottom: 5px; display: block; }
+    .form-input, .form-select, .form-textarea { width: 100%; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 0.625rem 0.875rem; font-family: var(--font-body); font-size: 0.92rem; color: var(--text); background: white; appearance: none; transition: border-color 0.2s; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--coral); }
+    .form-textarea { min-height: 80px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .btn-primary { width: 100%; background: var(--coral); color: white; border: none; border-radius: 50px; padding: 0.875rem; font-family: var(--font-body); font-size: 0.95rem; font-weight: 500; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s, transform 0.1s; }
+    .btn-primary:active { transform: scale(0.98); background: var(--coral-dark); }
+    .btn-secondary { width: 100%; background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); border-radius: 50px; padding: 0.75rem; font-family: var(--font-body); font-size: 0.88rem; cursor: pointer; margin-top: 0.5rem; }
+    .btn-danger { width: 100%; background: transparent; color: #a02d2d; border: 1px solid rgba(160,45,45,0.3); border-radius: 50px; padding: 0.75rem; font-family: var(--font-body); font-size: 0.88rem; cursor: pointer; margin-top: 0.5rem; }
+
+    .fab { position: fixed; bottom: 4.5rem; right: 1.25rem; width: 54px; height: 54px; border-radius: 50%; background: var(--coral); color: white; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; z-index: 50; transition: background 0.2s, transform 0.1s; }
+    .fab:active { transform: scale(0.95); background: var(--coral-dark); }
+
+    .bottom-bar { flex-shrink: 0; padding: 0.75rem 1.25rem; border-top: 1px solid var(--border); background: var(--warm-white); display: flex; gap: 8px; }
+    .export-btn { flex: 1; background: transparent; border: 1px solid var(--border-strong); border-radius: 50px; padding: 0.6rem; font-family: var(--font-body); font-size: 0.78rem; color: var(--text-muted); cursor: pointer; }
+
+    .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); }
+    .empty-state-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.5; }
+    .empty-state p { font-size: 0.88rem; line-height: 1.6; }
+
+    .loading-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast { position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--cranberry); color: white; padding: 0.625rem 1.25rem; border-radius: 50px; font-size: 0.82rem; opacity: 0; transition: all 0.3s; z-index: 300; white-space: nowrap; max-width: 90vw; text-align: center; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .variety-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .variety-chip { background: var(--cream); border: 1px solid var(--border-strong); border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; cursor: pointer; color: var(--text); }
+    .variety-chip.selected { background: var(--coral); border-color: var(--coral); color: white; }
+
+    #photo-file-input { display: none; }
+
+    .confirm-overlay { position: fixed; inset: 0; background: rgba(58,26,25,0.5); z-index: 250; display: flex; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .confirm-overlay.open { opacity: 1; pointer-events: all; }
+    .confirm-box { background: var(--warm-white); border-radius: var(--radius); padding: 1.5rem; width: 100%; max-width: 320px; }
+    .confirm-title { font-weight: 500; font-size: 1rem; margin-bottom: 0.5rem; color: var(--text); }
+    .confirm-msg { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.5; }
+    .confirm-btns { display: flex; gap: 8px; }
+    .confirm-btns button { flex: 1; padding: 0.75rem; border-radius: 50px; font-family: var(--font-body); font-size: 0.88rem; cursor: pointer; border: 1px solid var(--border-strong); background: transparent; color: var(--text-muted); }
+    .confirm-btns .confirm-yes { background: #a02d2d; border-color: #a02d2d; color: white; }
+  </style>
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="auth-title">
+    <span class="auth-bent-birch">Bent Birch</span>
+    <span class="auth-blooms">Blooms</span>
+  </div>
+  <div class="auth-sub">Farm Journal</div>
+  <div style="position:absolute;bottom:1.5rem;right:1.5rem;font-size:0.68rem;color:var(--text-light);font-family:var(--font-body)">v3.12</div>
+  <button class="auth-btn" onclick="checkPasscode()">
+    Enter farm journal
+  </button>
+  <div style="margin-top:1rem;display:flex;gap:8px;width:100%;max-width:280px">
+    <input type="password" id="passcode-input" placeholder="Passcode" onkeydown="if(event.key==='Enter')checkPasscode()"
+      style="flex:1;border:1px solid rgba(103,46,45,0.25);border-radius:50px;padding:0.75rem 1.25rem;font-family:var(--font-body);font-size:0.95rem;color:var(--text);background:white;outline:none;text-align:center;letter-spacing:0.1em">
+  </div>
+  <div id="passcode-error" style="margin-top:0.5rem;font-size:0.8rem;color:#a02d2d;display:none">Incorrect passcode</div>
+</div>
+
+<div id="app">
+  <header class="app-header">
+    <div class="header-top">
+      <div class="header-title">
+        <span class="title-bent-birch">Bent Birch</span>
+        <span class="title-blooms">Blooms</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <div class="header-date" id="header-date"></div>
+        <div style="font-size:0.6rem;color:var(--text-light)">v3.12</div>
+      </div>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('harvest')">Harvest</button>
+      <button class="nav-tab" onclick="showTab('varieties')">Varieties</button>
+      <button class="nav-tab" onclick="showTab('photos')">Photos</button>
+      <button class="nav-tab" onclick="showTab('seeds')">Seeds</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div id="tab-harvest" class="tab-panel active">
+      <div class="stats-row">
+        <div class="stat-card" style="cursor:pointer" onclick="showTab('harvest')"><div class="stat-val" id="stat-stems">0</div><div class="stat-label">stems today</div></div>
+        <div class="stat-card" style="cursor:pointer" onclick="showTab('varieties')"><div class="stat-val" id="stat-varieties">0</div><div class="stat-label">varieties</div></div>
+        <div class="stat-card" style="cursor:pointer" onclick="showTab('harvest')"><div class="stat-val" id="stat-entries">0</div><div class="stat-label">entries</div></div>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-icon" id="weather-icon">&#127780;</div>
+        <div class="weather-info">
+          <div class="weather-temp" id="weather-temp">Loading weather&#8230;</div>
+          <div class="weather-desc" id="weather-desc">Standish, ME</div>
+        </div>
+        <div class="weather-details" id="weather-details"></div>
+      </div>
+
+      <div class="voice-card">
+        <div class="voice-mode-row">
+          <button class="mode-btn active" id="mode-harvest" onclick="setVoiceMode('harvest')">Log harvest</button>
+          <button class="mode-btn" id="mode-variety" onclick="setVoiceMode('variety')">Add variety</button>
+          <button class="mode-btn" id="mode-bulk" onclick="setVoiceMode('bulk')">Bulk varieties</button>
+        </div>
+        <button class="voice-btn" id="voice-btn" onclick="toggleVoice()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+          <span id="voice-btn-text">tap to start</span>
+        </button>
+        <div class="transcript-display" id="transcript"></div>
+        <div class="bulk-progress" id="bulk-progress"></div>
+      </div>
+
+      <div class="section-heading">Today&#8217;s log</div>
+      <div id="today-log"></div>
+      <div class="section-heading" style="margin-top:1.25rem">Recent entries</div>
+      <div id="recent-log"></div>
+    </div>
+
+    <div id="tab-varieties" class="tab-panel">
+      <div class="variety-search-bar">
+        <input type="text" class="variety-search-input" id="variety-search" placeholder="Search varieties&#8230;" oninput="filterVarieties()">
+      </div>
+      <div class="letter-jump" id="letter-jump"></div>
+      <div class="varieties-count" id="varieties-count"></div>
+      <div id="varieties-list"></div>
+    </div>
+
+    <div id="tab-photos" class="tab-panel">
+      <div class="photo-upload-area" onclick="document.getElementById('photo-file-input').click()">
+        <div style="font-size:2rem">&#127800;</div>
+        <p>Tap to add a photo<br><span style="font-size:0.75rem">Tagged with variety &amp; month automatically</span></p>
+      </div>
+      <input type="file" id="photo-file-input" accept="image/*" onchange="handlePhotoUpload(event)">
+      <div id="photo-grid" class="photo-grid"></div>
+    </div>
+
+    <div id="tab-seeds" class="tab-panel"><div id="seeds-list"></div></div>
+  </main>
+
+  <div class="bottom-bar">
+    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+    <button class="export-btn" onclick="signOut()">Sign out</button>
+  </div>
+</div>
+
+<button class="fab" id="fab" onclick="openFAB()" style="display:none">+</button>
+
+<div class="modal-overlay" id="fab-modal" onclick="closeFABModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add entry</div>
+    <button class="btn-primary" style="margin-bottom:0" onclick="closeFABModal();openHarvestModal()">Log harvest</button>
+    <button class="btn-primary" style="background:var(--oceanside)" onclick="closeFABModal();openModal('seed-modal')">Add seedling</button>
+    <button class="btn-primary" style="background:var(--blossom-deep)" onclick="closeFABModal();openVarietyModal()">Add variety</button>
+    <button class="btn-secondary" onclick="closeFABModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="harvest-modal" onclick="closeModal('harvest-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Log harvest</div>
+    <div class="form-group">
+      <label class="form-label">Variety</label>
+      <input type="text" class="form-input" id="h-variety" placeholder="e.g. Caf&#233; au Lait" list="variety-datalist" autocomplete="off">
+      <datalist id="variety-datalist"></datalist>
+      <div class="variety-chips" id="variety-chips"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Stems cut</label><input type="number" class="form-input" id="h-stems" placeholder="0" min="0"></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="h-notes" placeholder="Plant health, bloom quality, anything notable&#8230;"></textarea></div>
+    <div class="form-group">
+      <label class="form-label">Health flag</label>
+      <select class="form-select" id="h-health"><option value="">None</option><option value="good">Looking good</option><option value="concern">Health concern</option></select>
+    </div>
+    <button class="btn-primary" onclick="saveHarvestEntry()">Save entry</button>
+    <button class="btn-secondary" onclick="closeModal('harvest-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-harvest-modal" onclick="closeModal('edit-harvest-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit entry</div>
+    <input type="hidden" id="eh-id">
+    <div class="form-group"><label class="form-label">Variety</label><input type="text" class="form-input" id="eh-variety" list="variety-datalist"></div>
+    <div class="form-group"><label class="form-label">Stems cut</label><input type="number" class="form-input" id="eh-stems" min="0"></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="eh-notes"></textarea></div>
+    <div class="form-group"><label class="form-label">Health flag</label><select class="form-select" id="eh-health"><option value="">None</option><option value="good">Looking good</option><option value="concern">Health concern</option></select></div>
+    <button class="btn-primary" onclick="updateHarvestEntry()">Save changes</button>
+    <button class="btn-danger" onclick="confirmDeleteFromModal('entry','eh-id','eh-variety','edit-harvest-modal')">Delete entry</button>
+    <button class="btn-secondary" onclick="closeModal('edit-harvest-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="variety-modal" onclick="closeModal('variety-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add variety</div>
+    <div class="form-group">
+      <label class="form-label">Variety name</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" class="form-input" id="v-name" placeholder="e.g. Penhill Dark Monarch" onkeydown="if(event.key==='Enter'){event.preventDefault();autoFillVariety()}" style="flex:1">
+        <button onclick="autoFillVariety()" style="flex-shrink:0;height:38px;padding:0 14px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:var(--blossom-deep);color:white;font-family:var(--font-body);font-size:0.78rem;cursor:pointer;white-space:nowrap"><span id="autofill-text">Look up</span></button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Tubers</label><input type="number" class="form-input" id="v-tubers" placeholder="0" min="0"></div>
+      <div class="form-group"><label class="form-label">Plants in ground</label><input type="number" class="form-input" id="v-plants" placeholder="0" min="0"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Form</label><select class="form-select" id="v-form"><option value="">Unknown</option><option>Formal Decorative</option><option>Informal Decorative</option><option>Semi-Cactus</option><option>Straight Cactus</option><option>Incurved Cactus</option><option>Laciniated</option><option>Ball</option><option>Miniature Ball</option><option>Pompon</option><option>Stellar</option><option>Waterlily</option><option>Novelty Fully Double</option><option>Peony</option><option>Anemone</option><option>Novelty Open</option><option>Collarette</option><option>Orchid</option><option>Orchette</option><option>Single</option><option>Mignon Single</option><option>Other</option></select></div>
+    <div class="form-group"><label class="form-label">Color</label><input type="text" class="form-input" id="v-color" placeholder="e.g. Blush pink with coral tips"></div>
+    <div class="form-group"><label class="form-label">Bloom size</label><select class="form-select" id="v-size"><option value="">Unknown</option><option>Miniature (under 2&#8221;)</option><option>Small (2&#8211;4&#8221;)</option><option>Medium (4&#8211;6&#8221;)</option><option>Large (6&#8211;8&#8221;)</option><option>Giant (8&#8221;+)</option></select></div>
+    <div class="form-group"><label class="form-label">Height</label><input type="text" class="form-input" id="v-height" placeholder="e.g. 4&#8211;5 ft"></div>
+    <div class="form-group"><label class="form-label">Source / supplier</label><input type="text" class="form-input" id="v-source" placeholder="e.g. Swan Island Dahlias"></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="v-notes"></textarea></div>
+    <button class="btn-primary" onclick="saveVariety()">Save variety</button>
+    <button class="btn-secondary" onclick="closeModal('variety-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-variety-modal" onclick="closeModal('edit-variety-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit variety</div>
+    <input type="hidden" id="ev-id">
+    <div class="form-group">
+      <label class="form-label">Variety name</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" class="form-input" id="ev-name" style="flex:1">
+        <button onclick="autoFillVarietyEdit()" style="flex-shrink:0;height:38px;padding:0 14px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:var(--blossom-deep);color:white;font-family:var(--font-body);font-size:0.78rem;cursor:pointer;white-space:nowrap"><span id="autofill-edit-text">Look up</span></button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Tubers</label><input type="number" class="form-input" id="ev-tubers" min="0"></div>
+      <div class="form-group"><label class="form-label">Plants in ground</label><input type="number" class="form-input" id="ev-plants" min="0"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Form</label><select class="form-select" id="ev-form"><option value="">Unknown</option><option>Formal Decorative</option><option>Informal Decorative</option><option>Semi-Cactus</option><option>Straight Cactus</option><option>Incurved Cactus</option><option>Laciniated</option><option>Ball</option><option>Miniature Ball</option><option>Pompon</option><option>Stellar</option><option>Waterlily</option><option>Novelty Fully Double</option><option>Peony</option><option>Anemone</option><option>Novelty Open</option><option>Collarette</option><option>Orchid</option><option>Orchette</option><option>Single</option><option>Mignon Single</option><option>Other</option></select></div>
+    <div class="form-group"><label class="form-label">Color</label><input type="text" class="form-input" id="ev-color"></div>
+    <div class="form-group"><label class="form-label">Bloom size</label><select class="form-select" id="ev-size"><option value="">Unknown</option><option>Miniature (under 2&#8221;)</option><option>Small (2&#8211;4&#8221;)</option><option>Medium (4&#8211;6&#8221;)</option><option>Large (6&#8211;8&#8221;)</option><option>Giant (8&#8221;+)</option></select></div>
+    <div class="form-group"><label class="form-label">Height</label><input type="text" class="form-input" id="ev-height"></div>
+    <div class="form-group"><label class="form-label">Source / supplier</label><input type="text" class="form-input" id="ev-source"></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="ev-notes"></textarea></div>
+    <button class="btn-primary" onclick="updateVariety()">Save changes</button>
+    <button class="btn-danger" onclick="confirmDeleteFromModal('variety','ev-id','ev-name','edit-variety-modal')">Delete variety</button>
+    <button class="btn-secondary" onclick="closeModal('edit-variety-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="seed-modal" onclick="closeModal('seed-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add seedling</div>
+    <div class="form-group"><label class="form-label">Seedling name / label</label><input type="text" class="form-input" id="s-name" placeholder="e.g. Seedling 2025-A"></div>
+    <div class="form-group"><label class="form-label">Parent variety (if known)</label><input type="text" class="form-input" id="s-parent" placeholder="e.g. Caf&#233; au Lait open pollinated"></div>
+    <div class="form-group"><label class="form-label">Seed source</label><select class="form-select" id="s-source"><option value="saved">Saved from my plants</option><option value="purchased">Purchased seeds</option><option value="traded">Traded / gifted</option></select></div>
+    <div class="form-group"><label class="form-label">Germination date</label><input type="date" class="form-input" id="s-germdate"></div>
+    <div class="form-group"><label class="form-label">Stage</label><select class="form-select" id="s-stage"><option value="germinated">Just germinated</option><option value="seedling">Seedling (true leaves)</option><option value="transplanted">Transplanted</option><option value="budding">Budding</option><option value="blooming">First bloom</option><option value="complete">Season complete</option></select></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="s-notes" placeholder="Vigor, unusual traits, observations&#8230;"></textarea></div>
+    <button class="btn-primary" onclick="saveSeed()">Save seedling</button>
+    <button class="btn-secondary" onclick="closeModal('seed-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-seed-modal" onclick="closeModal('edit-seed-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit seedling</div>
+    <input type="hidden" id="es-id">
+    <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="es-name"></div>
+    <div class="form-group"><label class="form-label">Parent variety</label><input type="text" class="form-input" id="es-parent"></div>
+    <div class="form-group"><label class="form-label">Seed source</label><select class="form-select" id="es-source"><option value="saved">Saved from my plants</option><option value="purchased">Purchased seeds</option><option value="traded">Traded / gifted</option></select></div>
+    <div class="form-group"><label class="form-label">Germination date</label><input type="date" class="form-input" id="es-germdate"></div>
+    <div class="form-group"><label class="form-label">Stage</label><select class="form-select" id="es-stage"><option value="germinated">Just germinated</option><option value="seedling">Seedling (true leaves)</option><option value="transplanted">Transplanted</option><option value="budding">Budding</option><option value="blooming">First bloom</option><option value="complete">Season complete</option></select></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="es-notes"></textarea></div>
+    <button class="btn-primary" onclick="updateSeed()">Save changes</button>
+    <button class="btn-danger" onclick="confirmDeleteFromModal('seed','es-id','es-name','edit-seed-modal')">Delete seedling</button>
+    <button class="btn-secondary" onclick="closeModal('edit-seed-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="photo-modal" onclick="closeModal('photo-modal',event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Tag this photo</div>
+    <img id="photo-preview" style="width:100%;border-radius:var(--radius-sm);margin-bottom:1rem;max-height:200px;object-fit:cover">
+    <div class="form-group"><label class="form-label">Variety</label><input type="text" class="form-input" id="p-variety" placeholder="Variety name" list="variety-datalist"></div>
+    <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-input" id="p-notes" placeholder="Optional note"></div>
+    <button class="btn-primary" onclick="savePhoto()">Save photo</button>
+    <button class="btn-secondary" onclick="closeModal('photo-modal')">Cancel</button>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title">Delete this?</div>
+    <div class="confirm-msg" id="confirm-msg">This can&#8217;t be undone.</div>
+    <div class="confirm-btns">
+      <button onclick="closeConfirm()">Cancel</button>
+      <button class="confirm-yes" onclick="executeConfirm()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged, setPersistence, browserLocalPersistence }
+    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, setDoc, updateDoc, deleteDoc, Timestamp }
+    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject }
+    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDAxJ4me3pbcGNRjAwOghcfsxViUooaEUs",
+    authDomain: "bent-birch-blooms.firebaseapp.com",
+    projectId: "bent-birch-blooms",
+    storageBucket: "bent-birch-blooms.firebasestorage.app",
+    messagingSenderId: "1043404067692",
+    appId: "1:1043404067692:web:547524135d086335cc5949",
+    measurementId: "G-SY1K7B86CN"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const provider = new GoogleAuthProvider();
+
+  let currentUser = null;
+  let allEntries = [], allVarieties = [], allSeeds = [], allPhotos = [];
+  let pendingPhotoFile = null;
+  let pendingConfirmFn = null;
+  let voiceMode = 'harvest';
+  let recognition = null;
+  let voiceListening = false;
+  let voiceProcessing = false;
+  let bulkListening = false;
+
+  const LAT = 43.7145, LON = -70.5703;
+
+  const TEST_USER_ID = 'test-local-user';
+
+  window.checkPasscode = () => {
+    const input = document.getElementById('passcode-input');
+    const error = document.getElementById('passcode-error');
+    if (input.value === 'dahlias') {
+      error.style.display = 'none';
+      currentUser = { uid: TEST_USER_ID };
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      document.getElementById('fab').style.display = 'flex';
+      initApp();
+    } else {
+      error.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  window.signOut = () => {
+    currentUser = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('fab').style.display = 'none';
+    document.getElementById('passcode-input').value = '';
+  };
+
+  async function initApp() {
+    document.getElementById('header-date').textContent =
+      new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+    setTranscriptHint();
+    await Promise.all([loadEntries(), loadVarieties(), loadSeeds(), loadPhotos()]);
+    fetchWeather();
+  }
+
+  function setTranscriptHint() {
+    const hints = {
+      harvest: '\u201cCaf\u00e9 au Lait, four stems, looking healthy\u201d',
+      variety: 'Say a variety name to add it',
+      bulk: 'Say \u201ccreate varieties for all of the following\u201d then list them, then \u201cdone\u201d'
+    };
+    document.getElementById('transcript').textContent = hints[voiceMode] || '';
+  }
+
+  function userCol(col) { return collection(db, 'users', currentUser.uid, col); }
+
+  async function loadEntries() {
+    allEntries = await dbGetAll('entries', 'timestamp');
+    renderHarvestTab();
+  }
+
+  async function loadVarieties() {
+    allVarieties = await dbGetAll('varieties');
+    renderVarietiesTab();
+    updateVarietyDatalist();
+  }
+
+  async function loadSeeds() {
+    allSeeds = await dbGetAll('seeds');
+    renderSeedsTab();
+  }
+
+  async function loadPhotos() {
+    allPhotos = await dbGetAll('photos', 'timestamp');
+    renderPhotosTab();
+  }
+
+  function renderHarvestTab() {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayEntries = allEntries.filter(e => {
+      const d = new Date(e.timestamp?.toDate?.() || e.timestamp);
+      d.setHours(0,0,0,0);
+      return d.getTime() === today.getTime();
+    });
+    document.getElementById('stat-stems').textContent = todayEntries.reduce((s,e) => s+(e.stems||0), 0);
+    document.getElementById('stat-varieties').textContent = new Set(todayEntries.map(e=>e.variety)).size;
+    document.getElementById('stat-entries').textContent = todayEntries.length;
+
+    document.getElementById('today-log').innerHTML = todayEntries.length
+      ? todayEntries.map(entryHTML).join('')
+      : '<div class="empty-state"><div class="empty-state-icon">&#9986;&#65039;</div><p>No harvests logged today yet.</p></div>';
+
+    const recent = allEntries.filter(e => {
+      const d = new Date(e.timestamp?.toDate?.() || e.timestamp);
+      d.setHours(0,0,0,0);
+      return d.getTime() !== today.getTime();
+    }).slice(0,30);
+
+    document.getElementById('recent-log').innerHTML = recent.length
+      ? recent.map(entryHTML).join('')
+      : '<div style="color:var(--text-light);font-size:0.82rem;padding:0.5rem 0">No previous entries yet.</div>';
+  }
+
+  function entryHTML(e) {
+    const ts = e.timestamp?.toDate?.() || new Date(e.timestamp);
+    const timeStr = ts.toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+    const badge = e.health_flag === 'good' ? '<span class="health-badge health-good">healthy</span>'
+      : e.health_flag === 'concern' ? '<span class="health-badge health-concern">concern</span>' : '';
+    return `<div class="entry-card">
+      <div>
+        <div class="entry-variety">${e.variety||'Unknown'}</div>
+        <div class="entry-time">${timeStr}</div>
+        ${e.notes ? `<div class="entry-notes">${e.notes}</div>` : ''}
+        ${badge}
+        <div class="entry-actions">
+          <button class="action-btn" onclick="openEditHarvest('${e.id}')">Edit</button>
+          <button class="action-btn delete" onclick="confirmDelete('entry','${e.id}','${(e.variety||'entry').replace(/'/g,'&#39;')} entry')">Delete</button>
+        </div>
+      </div>
+      <div class="entry-stems">
+        <div class="stems-num">${e.stems||0}</div>
+        <div class="stems-label">stems</div>
+      </div>
+    </div>`;
+  }
+
+  function renderVarietiesTab(filter) {
+    const search = filter !== undefined ? filter : (document.getElementById('variety-search')?.value||'').toLowerCase().trim();
+    const filtered = search
+      ? allVarieties.filter(v => v.name?.toLowerCase().includes(search))
+      : allVarieties;
+
+    const countEl = document.getElementById('varieties-count');
+    if (countEl) countEl.textContent = filtered.length === allVarieties.length
+      ? `${allVarieties.length} variet${allVarieties.length===1?'y':'ies'}`
+      : `${filtered.length} of ${allVarieties.length} varieties`;
+
+    renderLetterJump();
+
+    const el = document.getElementById('varieties-list');
+    if (!filtered.length) {
+      el.innerHTML = allVarieties.length
+        ? '<div class="empty-state"><div class="empty-state-icon">&#128269;</div><p>No varieties match your search.</p></div>'
+        : '<div class="empty-state"><div class="empty-state-icon">&#127800;</div><p>No varieties added yet.<br>Use voice or tap + to add.</p></div>';
+      return;
+    }
+    const sorted = [...filtered].sort((a,b) => (a.name||'').localeCompare(b.name||''));
+    el.innerHTML = sorted.map(v => {
+      const entries = allEntries.filter(e => e.variety?.toLowerCase() === v.name?.toLowerCase());
+      const totalStems = entries.reduce((s,e) => s+(e.stems||0), 0);
+      return `<div class="variety-detail-card" id="vc-${v.id}">
+        <div class="variety-detail-header">
+          <div class="variety-detail-name">${v.name}</div>
+          <div class="variety-actions">
+            <button class="retry-btn" onclick="retryVarietyLookup('${v.id}','${v.name.replace(/'/g,'&#39;').replace(/"/g,'&quot;')}')">Look up</button>
+            <button class="action-btn" onclick="openEditVariety('${v.id}')">Edit</button>
+          </div>
+        </div>
+        <div class="variety-specs">
+          <div class="spec-item"><div class="spec-label">Form</div><div class="spec-val">${v.form||'&#8212;'}</div></div>
+          <div class="spec-item"><div class="spec-label">Bloom size</div><div class="spec-val">${v.size||'&#8212;'}</div></div>
+          <div class="spec-item"><div class="spec-label">Height</div><div class="spec-val">${v.height||'&#8212;'}</div></div>
+          <div class="spec-item"><div class="spec-label">Tubers</div><div class="spec-val">${v.tubers!=null?v.tubers:'&#8212;'}</div></div>
+          <div class="spec-item"><div class="spec-label">Plants</div><div class="spec-val">${v.plants!=null?v.plants:'&#8212;'}</div></div>
+          <div class="spec-item"><div class="spec-label">Color</div><div class="spec-val">${v.color||'&#8212;'}</div></div>
+        </div>
+        <div class="variety-footer">
+          <span style="font-size:0.78rem;color:var(--text-muted)">${entries.length} harvest entr${entries.length===1?'y':'ies'}${v.source?' \u00b7 '+v.source:''}</span>
+          <span class="variety-footer-stems">${totalStems} stems</span>
+        </div>
+        ${v.notes ? `<div style="font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border)">${v.notes}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function renderLetterJump() {
+    const el = document.getElementById('letter-jump');
+    if (!el) return;
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const usedLetters = new Set(allVarieties.map(v => v.name?.[0]?.toUpperCase()).filter(Boolean));
+    el.innerHTML = letters.map(l =>
+      `<button class="letter-btn ${usedLetters.has(l)?'has-varieties':''}" onclick="jumpToLetter('${l}')">${l}</button>`
+    ).join('');
+  }
+
+  window.filterVarieties = () => renderVarietiesTab();
+
+  window.jumpToLetter = (letter) => {
+    document.getElementById('variety-search').value = '';
+    renderVarietiesTab('');
+    const sorted = [...allVarieties].sort((a,b) => (a.name||'').localeCompare(b.name||''));
+    const first = sorted.find(v => v.name?.[0]?.toUpperCase() === letter);
+    if (first) {
+      setTimeout(() => {
+        const el = document.getElementById('vc-'+first.id);
+        if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 50);
+    }
+  };
+
+  function updateVarietyDatalist() {
+    const dl = document.getElementById('variety-datalist');
+    if (dl) dl.innerHTML = allVarieties.map(v => `<option value="${v.name}">`).join('');
+    const chips = document.getElementById('variety-chips');
+    if (chips) chips.innerHTML = allVarieties.map(v =>
+      `<span class="variety-chip" onclick="selectChip(this,'${v.name.replace(/'/g,'&#39;')}')">${v.name}</span>`
+    ).join('');
+  }
+
+  window.selectChip = (el, name) => {
+    document.querySelectorAll('.variety-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('h-variety').value = name;
+  };
+
+  function renderPhotosTab() {
+    const el = document.getElementById('photo-grid');
+    if (!allPhotos.length) { el.innerHTML = ''; return; }
+    el.innerHTML = allPhotos.map(p => {
+      const month = new Date(p.timestamp?.toDate?.() || p.timestamp)
+        .toLocaleDateString('en-US', { month:'long', year:'numeric' });
+      return `<div class="photo-item">
+        <img src="${p.url}" alt="${p.variety||''}" loading="lazy">
+        <div class="photo-caption">${p.variety||'Unknown'} \u00b7 ${month}</div>
+        <button class="photo-delete" onclick="confirmDelete('photo','${p.id}','this photo')">&#215;</button>
+      </div>`;
+    }).join('');
+  }
+
+  function renderSeedsTab() {
+    const el = document.getElementById('seeds-list');
+    if (!allSeeds.length) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#127807;</div><p>No seedlings tracked yet.<br>Tap + to add a seed-grown plant.</p></div>';
+      return;
+    }
+    const stageLabels = { germinated:'Germinated', seedling:'Seedling', transplanted:'Transplanted', budding:'Budding', blooming:'First Bloom', complete:'Season Complete' };
+    el.innerHTML = allSeeds.map(s => `<div class="seed-card">
+      <div class="seed-header">
+        <div class="seed-name">${s.name}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="seed-stage">${stageLabels[s.stage]||s.stage}</div>
+          <button class="action-btn" onclick="openEditSeed('${s.id}')">Edit</button>
+        </div>
+      </div>
+      <div class="seed-grid">
+        <div class="seed-field"><div class="seed-field-label">Parent</div><div>${s.parent||'Unknown'}</div></div>
+        <div class="seed-field"><div class="seed-field-label">Source</div><div>${s.source||'&#8212;'}</div></div>
+        <div class="seed-field"><div class="seed-field-label">Germinated</div><div>${s.germdate||'&#8212;'}</div></div>
+      </div>
+      ${s.notes ? `<div style="font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-top:0.625rem">${s.notes}</div>` : ''}
+    </div>`).join('');
+  }
+
+  async function fetchWeather() {
+    try {
+      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,precipitation,weathercode,windspeed_10m,relativehumidity_2m&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch`);
+      const data = await res.json();
+      const c = data.current;
+      const icons = {0:'&#9728;&#65039;',1:'&#127780;',2:'&#9925;',3:'&#9729;',45:'&#127787;',51:'&#127782;',61:'&#127783;',63:'&#127783;',80:'&#127782;',95:'&#9928;'};
+      const descs = {0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',51:'Light drizzle',61:'Light rain',63:'Rain',80:'Showers',95:'Thunderstorm'};
+      const code = c.weathercode;
+      document.getElementById('weather-icon').innerHTML = icons[code]||'&#127780;';
+      document.getElementById('weather-temp').textContent = `${Math.round(c.temperature_2m)}\u00b0F \u00b7 ${descs[code]||''}`;
+      document.getElementById('weather-details').innerHTML = `&#128167; ${c.relativehumidity_2m}%<br>&#128168; ${Math.round(c.windspeed_10m)} mph<br>&#127783; ${c.precipitation}"`;
+      const dateKey = new Date().toISOString().split('T')[0];
+      await setDoc(doc(db,'users',currentUser.uid,'weather',dateKey), {
+        temp_f:c.temperature_2m, humidity:c.relativehumidity_2m,
+        windspeed:c.windspeed_10m, precipitation:c.precipitation,
+        weathercode:code, description:descs[code]||'', date:dateKey
+      });
+    } catch(e) { document.getElementById('weather-temp').textContent = 'Weather unavailable'; }
+  }
+
+  window.setVoiceMode = (mode) => {
+    voiceMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('mode-'+mode).classList.add('active');
+    setTranscriptHint();
+    if (voiceListening) stopVoice();
+  };
+
+  window.toggleVoice = () => {
+    if (voiceProcessing) return;
+    voiceListening ? stopVoice() : startVoice();
+  };
+
+  function startVoice() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { showToast('Speech recognition not available in this browser'); return; }
+    recognition = new SR();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+    voiceListening = true;
+    bulkListening = false;
+    document.getElementById('bulk-progress').classList.remove('visible');
+    setVoiceState('listening');
+
+    let finalText = '';
+    let silenceTimer = null;
+
+    recognition.onresult = e => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
+      }
+      const combined = finalText + interim;
+      document.getElementById('transcript').textContent = combined || 'Listening\u2026';
+      clearTimeout(silenceTimer);
+
+      if (voiceMode === 'bulk') {
+        const lower = combined.toLowerCase();
+        if (!bulkListening && (lower.includes('create varieties') || lower.includes('add varieties') || lower.includes('following'))) {
+          bulkListening = true;
+          document.getElementById('transcript').textContent = 'Ready \u2014 list your varieties, then say \u201cdone\u201d or \u201cthat\u2019s all\u201d';
+          return;
+        }
+        if (bulkListening && (lower.includes("that's all") || lower.includes("thats all") || lower.trim().endsWith('done') || lower.includes(' done '))) {
+          stopVoice();
+          processBulkVarieties(finalText.trim());
+          return;
+        }
+        return;
+      }
+
+      if (finalText.trim()) {
+        silenceTimer = setTimeout(() => {
+          const text = finalText.trim();
+          finalText = '';
+          if (voiceMode === 'harvest') processVoiceHarvest(text);
+          else if (voiceMode === 'variety') processVoiceVariety(text);
+        }, 1800);
+      }
+    };
+
+    recognition.onerror = e => {
+      if (e.error !== 'no-speech') { showToast('Mic error: ' + e.error); stopVoice(); }
+    };
+
+    recognition.onend = () => {
+      if (voiceListening && !voiceProcessing) setTimeout(() => { if(voiceListening) recognition.start(); }, 300);
+    };
+
+    recognition.start();
+    document.getElementById('transcript').textContent = voiceMode === 'bulk'
+      ? 'Say \u201ccreate varieties for all of the following\u201d\u2026'
+      : 'Listening\u2026';
+  }
+
+  function stopVoice() {
+    voiceListening = false;
+    if (recognition) recognition.stop();
+    setVoiceState('idle');
+  }
+
+  function setVoiceState(state) {
+    const btn = document.getElementById('voice-btn');
+    const txt = document.getElementById('voice-btn-text');
+    btn.className = 'voice-btn';
+    if (state === 'listening') {
+      btn.classList.add(voiceMode === 'bulk' ? 'bulk' : 'listening');
+      txt.textContent = 'listening \u2014 tap to stop';
+    } else if (state === 'processing') {
+      btn.classList.add('processing');
+      txt.innerHTML = '<span class="loading-spinner"></span> processing\u2026';
+    } else {
+      txt.textContent = 'tap to start';
+    }
+  }
+
+  const IS_LOCAL = window.location.protocol === 'file:' || 
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1';
+
+  async function dbAdd(colName, data) {
+    if (IS_LOCAL) {
+      const id = 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      return { id };
+    }
+    return await addDoc(userCol(colName), data);
+  }
+
+  async function dbUpdate(colName, id, data) {
+    if (IS_LOCAL) return;
+    await updateDoc(doc(db,'users',currentUser.uid,colName,id), data);
+  }
+
+  async function dbDelete(colName, id) {
+    if (IS_LOCAL) return;
+    await deleteDoc(doc(db,'users',currentUser.uid,colName,id));
+  }
+
+  async function dbGetAll(colName, orderField) {
+    if (IS_LOCAL) {
+      const key = `bblocal_${colName}`;
+      try { return JSON.parse(localStorage.getItem(key)||'[]'); } catch(e) { return []; }
+    }
+    const q = orderField
+      ? query(userCol(colName), orderBy(orderField,'desc'))
+      : userCol(colName);
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  }
+
+  async function dbSaveLocal(colName, items) {
+    if (IS_LOCAL) localStorage.setItem(`bblocal_${colName}`, JSON.stringify(items));
+  }
+
+  const API_ENDPOINT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? '/api/anthropic'
+    : 'https://api.anthropic.com/v1/messages';
+
+  async function callClaude(prompt, maxTokens=300) {
+    const res = await fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await res.json();
+    return data.content.map(c=>c.text||'').join('').trim().replace(/```json|```/g,'').trim();
+  }
+
+  async function lookupVarietyInfo(name) {
+    try {
+      const res = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 500,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          messages: [{ role: 'user', content: `Search for the dahlia variety "${name}" and return its ADS classification data. Return ONLY valid JSON (no markdown): {"form":"string or null","size":"string or null","height":"string or null","color":"string or null","notes":"string or null"}. Form must be one of: Ball, Cactus, Decorative, Formal Decorative, Informal Decorative, Dinner Plate, Pompon, Waterlily, Anemone, Collarette, Single, Other, or null. Size MUST be expressed as an inch range e.g. "4-6 inches" or "6 inches" — do NOT use words like small/medium/large. Height example: "4-5 ft". Color: plain English description.` }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content.filter(c => c.type === 'text').map(c => c.text).join('').trim().replace(/```json|```/g,'').trim();
+      return JSON.parse(text);
+    } catch(e) { return {}; }
+  }
+
+  function stemWord(word) {
+    // Basic plural/possessive stemming for variety name matching
+    return word
+      .replace(/ies$/i, 'y')     // cities → city
+      .replace(/ves$/i, 'f')     // leaves → leaf
+      .replace(/ses$/i, 's')     // roses → rose (approximate)
+      .replace(/s'$/i, '')       // possessives
+      .replace(/s$/i, '');       // simple plurals
+  }
+
+  function normalizeForMatch(text) {
+    // Normalize a string for variety matching — lowercase, stem each word
+    return text.toLowerCase().split(/\s+/).map(stemWord).join(' ');
+  }
+
+  function fixHomophones(text) {
+    // Replace number homophones when they appear near stem/count context
+    // "to/too" → "two", "for" → "four", "won" → "one", "ate" → "eight", "tree" → "three"
+    return text
+      .replace(/\b(to|too)\s+(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)/gi, 'two $2')
+      .replace(/\b(for)\s+(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)/gi, 'four $2')
+      .replace(/\b(won)\s+(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)/gi, 'one $2')
+      .replace(/\b(ate)\s+(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)/gi, 'eight $2')
+      .replace(/\b(tree)\s+(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)/gi, 'three $2')
+      .replace(/(?:cut|harvest(?:ed)?|picked)\s+(to|too)\b/gi, (m) => m.replace(/to|too/i, 'two'))
+      .replace(/(?:cut|harvest(?:ed)?|picked)\s+(for)\b/gi, (m) => m.replace(/for/i, 'four'))
+      .replace(/(?:cut|harvest(?:ed)?|picked)\s+(won)\b/gi, (m) => m.replace(/won/i, 'one'))
+      .replace(/(?:cut|harvest(?:ed)?|picked)\s+(ate)\b/gi, (m) => m.replace(/ate/i, 'eight'));
+  }
+
+  function parseHarvestLocally(text) {
+    // Fix homophones before parsing
+    text = fixHomophones(text);
+    const lower = text.toLowerCase();
+
+    // Extract stem count — "four stems", "4 stems", "4 cuts", "cut 4", "harvested 4", "four of Rip City"
+    const numberWords = { one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9, ten:10,
+      eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20 };
+    const numPattern = '(\\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)';
+    let stems = 0;
+    const stemMatch = lower.match(new RegExp(numPattern + '\\s*(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)', 'i'));
+    if (stemMatch) {
+      stems = parseInt(stemMatch[1]) || numberWords[stemMatch[1].toLowerCase()] || 0;
+    } else {
+      // "cut/harvested X" pattern
+      const cutMatch = lower.match(/(?:cut|harvest(?:ed)?|picked)\s+(\d+|one|two|three|four|five|six|seven|eight|nine|ten)/i);
+      if (cutMatch) stems = parseInt(cutMatch[1]) || numberWords[cutMatch[1].toLowerCase()] || 0;
+    }
+
+    // Match variety from known list using normalized/stemmed matching
+    const normalizedText = normalizeForMatch(text);
+    let variety = null;
+    let bestMatchLen = 0;
+    for (const v of allVarieties) {
+      const normalizedVariety = normalizeForMatch(v.name);
+      if (normalizedText.includes(normalizedVariety) && normalizedVariety.length > bestMatchLen) {
+        variety = v.name;
+        bestMatchLen = normalizedVariety.length;
+      }
+    }
+    // If no match, try to extract a capitalized proper noun sequence
+    if (!variety) {
+      const properNoun = text.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/);
+      if (properNoun) variety = properNoun[1];
+    }
+
+    // If stems still 0, try "N of [variety]" pattern — e.g. "three of Rip City"
+    if (stems === 0 && variety) {
+      const ofMatch = lower.match(new RegExp(numPattern + '\\s+of\\s+' + normalizeForMatch(variety), 'i'));
+      if (ofMatch) stems = parseInt(ofMatch[1]) || numberWords[ofMatch[1].toLowerCase()] || 0;
+      // Also try just a leading number at start of utterance
+      if (stems === 0) {
+        const leadMatch = lower.match(new RegExp('^' + numPattern + '\\b', 'i'));
+        if (leadMatch) stems = parseInt(leadMatch[1]) || numberWords[leadMatch[1].toLowerCase()] || 0;
+      }
+    }
+
+    // Health flag
+    const concernWords = ['concern','problem','issue','pest','mildew','wilt','yellow','disease','bug','aphid','dry','drooping','rot','dead','needs water','need water'];
+    const goodWords = ['healthy','great','beautiful','perfect','gorgeous','thriving','strong','good','nice','lovely','excellent'];
+    let health_flag = null;
+    if (concernWords.some(w => lower.includes(w))) health_flag = 'concern';
+    else if (goodWords.some(w => lower.includes(w))) health_flag = 'good';
+
+    // Extract notes — strip stem counts, variety name, filler words, number words
+    const numWordList = Object.keys(numberWords).join('|');
+    let notes = text
+      .replace(new RegExp('\\b(' + numWordList + ')\\s+of\\s+' + (variety||''), 'gi'), '')
+      .replace(/\d+\s*(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)/gi, '')
+      .replace(new RegExp('\\b(' + numWordList + ')\\s*(stem|stems|bloom|blooms|cut|cuts|flower|flowers|head|heads)', 'gi'), '')
+      .replace(variety ? new RegExp(variety.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi') : /xxxx/, '')
+      .replace(/\b(from|the|plant|is|are|looking|pretty|a|an|and|but|it|they|of|uhh+|um+|uh+|like|so|just|really)\b/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (notes.length < 4) notes = null;
+
+    const isHarvestEntry = stems > 0 || variety !== null;
+    return { variety: variety || 'Unknown', stems, notes, health_flag, isHarvestEntry };
+  }
+
+  async function processVoiceHarvest(text) {
+    voiceProcessing = true;
+    const wasListening = voiceListening;
+    if (recognition) recognition.stop();
+    setVoiceState('processing');
+
+    // Try fast local parse first
+    const local = parseHarvestLocally(text);
+
+    if (local.isHarvestEntry) {
+      // Fast path — no API call needed
+      const entry = {
+        variety: local.variety,
+        stems: local.stems,
+        notes: local.notes,
+        health_flag: local.health_flag,
+        raw_transcript: text,
+        timestamp: IS_LOCAL ? new Date().toISOString() : Timestamp.now()
+      };
+      const docRef = await dbAdd('entries', entry);
+      allEntries.unshift({ id: docRef.id, ...entry });
+      await dbSaveLocal('entries', allEntries);
+
+      // Auto-create variety stub if this variety doesn't exist yet
+      if (local.variety !== 'Unknown' && !allVarieties.find(v => v.name.toLowerCase() === local.variety.toLowerCase())) {
+        const newVar = { name: local.variety, tubers: 0, plants: 0, timestamp: IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+        const vRef = await dbAdd('varieties', newVar);
+        allVarieties.push({ id: vRef.id, ...newVar });
+        await dbSaveLocal('varieties', allVarieties);
+        updateVarietyDatalist();
+      }
+
+      renderHarvestTab(); renderVarietiesTab();
+      document.getElementById('transcript').textContent = `Logged: ${entry.variety}, ${entry.stems} stems${entry.notes ? ' \u2014 ' + entry.notes : ''}`;
+      showToast('Entry saved!');
+    } else {
+      // Fall back to Claude for ambiguous entries
+      try {
+        const varList = allVarieties.length ? 'Known varieties: ' + allVarieties.map(v=>v.name).join(', ') + '.' : '';
+        const raw = await callClaude(`Parse this harvest voice note. ${varList}\nVoice note: "${text}"\nReturn ONLY valid JSON: {"variety":"string","stems":0,"notes":"string or null","new_variety":false,"health_flag":"good|concern|null"}\nIf not a harvest entry: {"error":"not a harvest entry"}`, 200);
+        const parsed = JSON.parse(raw);
+        if (!parsed.error) {
+          const entry = { variety:parsed.variety||'Unknown', stems:parseInt(parsed.stems)||0, notes:parsed.notes||null, health_flag:parsed.health_flag||null, raw_transcript:text, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+          const docRef = await dbAdd('entries', entry);
+          allEntries.unshift({ id:docRef.id, ...entry });
+          await dbSaveLocal('entries', allEntries);
+          if (parsed.new_variety && parsed.variety && !allVarieties.find(v=>v.name===parsed.variety)) {
+            const info = await lookupVarietyInfo(parsed.variety);
+            const newVar = { name:parsed.variety, tubers:0, plants:0, ...info, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+            const vRef = await dbAdd('varieties', newVar);
+            allVarieties.push({ id:vRef.id, ...newVar });
+            await dbSaveLocal('varieties', allVarieties);
+            updateVarietyDatalist();
+          }
+          renderHarvestTab(); renderVarietiesTab();
+          document.getElementById('transcript').textContent = `Logged: ${entry.variety}, ${entry.stems} stems${entry.notes ? ' \u2014 '+entry.notes : ''}`;
+          showToast('Entry saved!');
+        } else {
+          document.getElementById('transcript').textContent = 'Not recognized as a harvest entry. Try again.';
+        }
+      } catch(err) {
+        document.getElementById('transcript').textContent = 'Error processing. Please try again.';
+      }
+    }
+
+    voiceProcessing = false;
+    if (wasListening) { setVoiceState('listening'); setTimeout(() => { if(voiceListening) recognition.start(); }, 300); }
+    else setVoiceState('idle');
+  }
+
+  async function processVoiceVariety(text) {
+    voiceProcessing = true;
+    const wasListening = voiceListening;
+    if (recognition) recognition.stop();
+    setVoiceState('processing');
+
+    // Strip common command phrases to extract just the variety name
+    let varietyName = text.trim()
+      .replace(/^(add|create|new|log|save)\s+(a\s+)?variety\s+(for\s+|called\s+|named\s+)?/i, '')
+      .replace(/^(add|create|new)\s+/i, '')
+      .trim();
+
+    // If after stripping it's empty, use original
+    if (!varietyName) varietyName = text.trim();
+
+    document.getElementById('transcript').textContent = `Looking up \u201c${varietyName}\u201d\u2026`;
+    const info = await lookupVarietyInfo(varietyName);
+    const newVar = { name:varietyName, tubers:1, plants:0, ...info, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+    const docRef = await dbAdd('varieties', newVar);
+    allVarieties.push({ id:docRef.id, ...newVar });
+    await dbSaveLocal('varieties', allVarieties);
+    renderVarietiesTab(); updateVarietyDatalist();
+    document.getElementById('transcript').textContent = `Added: ${varietyName}${info.form ? ' \u2014 '+info.form : ''}`;
+    showToast(`${varietyName} added!`);
+    voiceProcessing = false;
+    if (wasListening) { setVoiceState('listening'); setTimeout(() => { if(voiceListening) recognition.start(); }, 300); }
+    else setVoiceState('idle');
+  }
+
+  async function processBulkVarieties(rawText) {
+    voiceProcessing = true;
+    setVoiceState('processing');
+    document.getElementById('transcript').textContent = 'Parsing your variety list\u2026';
+    try {
+      const raw = await callClaude(`Extract dahlia variety names from this voice transcript. User said "done" at the end.\nTranscript: "${rawText}"\nReturn ONLY valid JSON array: [{"name":"variety name","tubers":1}]\nExtract tuber counts if mentioned (e.g. "three Caf\u00e9 au Lait" = tubers:3). Default to 1. Ignore filler words.`, 500);
+      const parsed = JSON.parse(raw);
+      const progressEl = document.getElementById('bulk-progress');
+      progressEl.classList.add('visible');
+      const dupes = [];
+
+      progressEl.innerHTML = parsed.map((v,i) => `<div class="progress-item" id="bp-${i}"><div class="progress-dot dot-pending" id="bpd-${i}"></div><span>${v.name}${v.tubers>1?' ('+v.tubers+' tubers)':''}</span></div>`).join('');
+
+      for (let i = 0; i < parsed.length; i++) {
+        const v = parsed[i];
+        document.getElementById('bpd-'+i).className = 'progress-dot dot-loading';
+        const existing = allVarieties.find(ev => ev.name.toLowerCase() === v.name.toLowerCase());
+        if (existing) {
+          const newTubers = (existing.tubers||0) + (v.tubers||1);
+          await dbUpdate('varieties', existing.id, { tubers:newTubers });
+          existing.tubers = newTubers;
+          dupes.push(v.name);
+          document.getElementById('bpd-'+i).className = 'progress-dot dot-dupe';
+        } else {
+          const info = await lookupVarietyInfo(v.name);
+          const newVar = { name:v.name, tubers:v.tubers||1, plants:0, ...info, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+          const docRef = await dbAdd('varieties', newVar);
+          allVarieties.push({ id:docRef.id, ...newVar });
+          document.getElementById('bpd-'+i).className = 'progress-dot dot-done';
+        }
+      }
+
+      renderVarietiesTab(); updateVarietyDatalist();
+      await dbSaveLocal('varieties', allVarieties);
+      const added = parsed.length - dupes.length;
+      let summary = `Added ${added} variet${added===1?'y':'ies'}.`;
+      if (dupes.length) summary += ` Updated tuber count for: ${dupes.join(', ')}.`;
+      document.getElementById('transcript').textContent = summary;
+      showToast(summary);
+    } catch(err) {
+      document.getElementById('transcript').textContent = 'Error processing list. Please try again.';
+    }
+    voiceProcessing = false;
+    setVoiceState('idle');
+  }
+
+  window.saveHarvestEntry = async () => {
+    const variety = document.getElementById('h-variety').value.trim();
+    if (!variety) { showToast('Please enter a variety name'); return; }
+    const entry = { variety, stems:parseInt(document.getElementById('h-stems').value)||0, notes:document.getElementById('h-notes').value.trim()||null, health_flag:document.getElementById('h-health').value||null, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+    const docRef = await dbAdd('entries', entry);
+    allEntries.unshift({ id:docRef.id, ...entry });
+    await dbSaveLocal('entries', allEntries);
+    if (!allVarieties.find(v=>v.name===variety)) {
+      const info = await lookupVarietyInfo(variety);
+      const newVar = { name:variety, tubers:0, plants:0, ...info, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+      const vRef = await dbAdd('varieties', newVar);
+      allVarieties.push({ id:vRef.id, ...newVar });
+      await dbSaveLocal('varieties', allVarieties);
+      updateVarietyDatalist();
+    }
+    renderHarvestTab(); renderVarietiesTab();
+    closeModal('harvest-modal');
+    showToast('Harvest entry saved!');
+    ['h-variety','h-stems','h-notes'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('h-health').value='';
+  };
+
+  window.openEditHarvest = (id) => {
+    const e = allEntries.find(e=>e.id===id); if (!e) return;
+    document.getElementById('eh-id').value=id;
+    document.getElementById('eh-variety').value=e.variety||'';
+    document.getElementById('eh-stems').value=e.stems||0;
+    document.getElementById('eh-notes').value=e.notes||'';
+    document.getElementById('eh-health').value=e.health_flag||'';
+    openModal('edit-harvest-modal');
+  };
+
+  window.updateHarvestEntry = async () => {
+    const id = document.getElementById('eh-id').value;
+    const updates = { variety:document.getElementById('eh-variety').value.trim(), stems:parseInt(document.getElementById('eh-stems').value)||0, notes:document.getElementById('eh-notes').value.trim()||null, health_flag:document.getElementById('eh-health').value||null };
+    await dbUpdate('entries', id, updates);
+    const idx = allEntries.findIndex(e=>e.id===id);
+    if (idx>-1) allEntries[idx]={...allEntries[idx],...updates};
+    await dbSaveLocal('entries', allEntries);
+    renderHarvestTab(); closeModal('edit-harvest-modal'); showToast('Entry updated!');
+  };
+
+  window.saveVariety = async () => {
+    const name = document.getElementById('v-name').value.trim();
+    if (!name) { showToast('Please enter a variety name'); return; }
+    const variety = { name, tubers:parseInt(document.getElementById('v-tubers').value)||0, plants:parseInt(document.getElementById('v-plants').value)||0, form:document.getElementById('v-form').value, color:document.getElementById('v-color').value.trim(), size:document.getElementById('v-size').value, height:document.getElementById('v-height').value.trim(), source:document.getElementById('v-source').value.trim(), notes:document.getElementById('v-notes').value.trim(), timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+    const docRef = await dbAdd('varieties', variety);
+    allVarieties.push({ id:docRef.id, ...variety });
+    await dbSaveLocal('varieties', allVarieties);
+    renderVarietiesTab(); updateVarietyDatalist(); closeModal('variety-modal'); showToast('Variety saved!');
+  };
+
+  window.autoFillVariety = async () => {
+    const name = document.getElementById('v-name').value.trim();
+    if (!name) { showToast('Enter a variety name first'); return; }
+    document.getElementById('autofill-text').innerHTML = '<span class="loading-spinner"></span> Looking up\u2026';
+    const info = await lookupVarietyInfo(name);
+    const validForms = ['Formal Decorative','Informal Decorative','Semi-Cactus','Straight Cactus','Incurved Cactus','Laciniated','Ball','Miniature Ball','Pompon','Stellar','Waterlily','Novelty Fully Double','Peony','Anemone','Novelty Open','Collarette','Orchid','Orchette','Single','Mignon Single','Other'];
+    document.getElementById('v-form').value = (info.form && validForms.includes(info.form)) ? info.form : '';
+    document.getElementById('v-color').value = info.color || '';
+    document.getElementById('v-height').value = info.height || '';
+    document.getElementById('v-notes').value = info.notes || '';
+    if (info.size) {
+      const sizeEl = document.getElementById('v-size');
+      const s = info.size.toLowerCase();
+      // Match by inch ranges mentioned in the size string
+      const inchMatch = s.match(/(\d+(?:\.\d+)?)\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)/);
+      const singleInch = s.match(/(\d+(?:\.\d+)?)\s*(?:inch|in|")/);
+      let sizeVal = '';
+      if (inchMatch) {
+        const mid = (parseFloat(inchMatch[1]) + parseFloat(inchMatch[2])) / 2;
+        if (mid < 2) sizeVal = 'Miniature (under 2\u201d)';
+        else if (mid <= 4) sizeVal = 'Small (2\u20134\u201d)';
+        else if (mid <= 6) sizeVal = 'Medium (4\u20136\u201d)';
+        else if (mid <= 8) sizeVal = 'Large (6\u20138\u201d)';
+        else sizeVal = 'Giant (8\u201d+)';
+      } else if (singleInch) {
+        const inch = parseFloat(singleInch[1]);
+        if (inch < 2) sizeVal = 'Miniature (under 2\u201d)';
+        else if (inch <= 4) sizeVal = 'Small (2\u20134\u201d)';
+        else if (inch <= 6) sizeVal = 'Medium (4\u20136\u201d)';
+        else if (inch <= 8) sizeVal = 'Large (6\u20138\u201d)';
+        else sizeVal = 'Giant (8\u201d+)';
+      } else if (s.includes('miniature') || s.includes('mini')) sizeVal = 'Miniature (under 2\u201d)';
+      else if (s.includes('small')) sizeVal = 'Small (2\u20134\u201d)';
+      else if (s.includes('medium') || s.includes('med')) sizeVal = 'Medium (4\u20136\u201d)';
+      else if (s.includes('large') || s.includes('lg')) sizeVal = 'Large (6\u20138\u201d)';
+      else if (s.includes('giant') || s.includes('giant') || s.includes('bb')) sizeVal = 'Giant (8\u201d+)';
+      if (sizeVal) sizeEl.value = sizeVal;
+    }
+    document.getElementById('autofill-text').textContent = 'Look up';
+    const filled = [info.form, info.color, info.height, info.size].filter(Boolean).length;
+    showToast(filled > 0 ? `Found info for ${name}!` : `Couldn\u2019t find data for \u201c${name}\u201d \u2014 check the spelling`);
+  };
+
+  window.autoFillVarietyEdit = async () => {
+    const name = document.getElementById('ev-name').value.trim();
+    if (!name) { showToast('Enter a variety name first'); return; }
+    document.getElementById('autofill-edit-text').innerHTML = '<span class="loading-spinner"></span>';
+    const info = await lookupVarietyInfo(name);
+    const validForms = ['Formal Decorative','Informal Decorative','Semi-Cactus','Straight Cactus','Incurved Cactus','Laciniated','Ball','Miniature Ball','Pompon','Stellar','Waterlily','Novelty Fully Double','Peony','Anemone','Novelty Open','Collarette','Orchid','Orchette','Single','Mignon Single','Other'];
+    document.getElementById('ev-form').value = (info.form && validForms.includes(info.form)) ? info.form : document.getElementById('ev-form').value;
+    if (info.color) document.getElementById('ev-color').value = info.color;
+    if (info.height) document.getElementById('ev-height').value = info.height;
+    if (info.notes) document.getElementById('ev-notes').value = info.notes;
+    if (info.size) {
+      const sizeEl = document.getElementById('ev-size');
+      const s = info.size.toLowerCase();
+      const inchMatch = s.match(/(\d+(?:\.\d+)?)\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)/);
+      const singleInch = s.match(/(\d+(?:\.\d+)?)\s*(?:inch|in|")/);
+      let sizeVal = '';
+      if (inchMatch) { const mid = (parseFloat(inchMatch[1])+parseFloat(inchMatch[2]))/2; if(mid<2)sizeVal='Miniature (under 2\u201d)';else if(mid<=4)sizeVal='Small (2\u20134\u201d)';else if(mid<=6)sizeVal='Medium (4\u20136\u201d)';else if(mid<=8)sizeVal='Large (6\u20138\u201d)';else sizeVal='Giant (8\u201d+)'; }
+      else if (singleInch) { const inch=parseFloat(singleInch[1]); if(inch<2)sizeVal='Miniature (under 2\u201d)';else if(inch<=4)sizeVal='Small (2\u20134\u201d)';else if(inch<=6)sizeVal='Medium (4\u20136\u201d)';else if(inch<=8)sizeVal='Large (6\u20138\u201d)';else sizeVal='Giant (8\u201d+)'; }
+      if (sizeVal) sizeEl.value = sizeVal;
+    }
+    document.getElementById('autofill-edit-text').textContent = 'Look up';
+    const filled = [info.form, info.color, info.height, info.size].filter(Boolean).length;
+    showToast(filled > 0 ? `Found info for ${name}!` : `Couldn\u2019t find data for \u201c${name}\u201d \u2014 check the spelling`);
+  };
+
+  window.openEditVariety = (id) => {
+    const v = allVarieties.find(v=>v.id===id); if (!v) return;
+    document.getElementById('ev-id').value=id;
+    document.getElementById('ev-name').value=v.name||'';
+    document.getElementById('ev-tubers').value=v.tubers||0;
+    document.getElementById('ev-plants').value=v.plants||0;
+    document.getElementById('ev-form').value=v.form||'';
+    document.getElementById('ev-color').value=v.color||'';
+    document.getElementById('ev-size').value=v.size||'';
+    document.getElementById('ev-height').value=v.height||'';
+    document.getElementById('ev-source').value=v.source||'';
+    document.getElementById('ev-notes').value=v.notes||'';
+    openModal('edit-variety-modal');
+  };
+
+  window.updateVariety = async () => {
+    const id = document.getElementById('ev-id').value;
+    const updates = { name:document.getElementById('ev-name').value.trim(), tubers:parseInt(document.getElementById('ev-tubers').value)||0, plants:parseInt(document.getElementById('ev-plants').value)||0, form:document.getElementById('ev-form').value, color:document.getElementById('ev-color').value.trim(), size:document.getElementById('ev-size').value, height:document.getElementById('ev-height').value.trim(), source:document.getElementById('ev-source').value.trim(), notes:document.getElementById('ev-notes').value.trim() };
+    await dbUpdate('varieties', id, updates);
+    const idx = allVarieties.findIndex(v=>v.id===id);
+    if (idx>-1) allVarieties[idx]={...allVarieties[idx],...updates};
+    await dbSaveLocal('varieties', allVarieties);
+    renderVarietiesTab(); updateVarietyDatalist(); closeModal('edit-variety-modal'); showToast('Variety updated!');
+  };
+
+  window.retryVarietyLookup = async (id, name) => {
+    showToast(`Looking up ${name}\u2026`);
+    const info = await lookupVarietyInfo(name);
+    await dbUpdate('varieties', id, info);
+    const idx = allVarieties.findIndex(v=>v.id===id);
+    if (idx>-1) allVarieties[idx]={...allVarieties[idx],...info};
+    await dbSaveLocal('varieties', allVarieties);
+    renderVarietiesTab(); showToast('Variety info updated!');
+  };
+
+  window.saveSeed = async () => {
+    const name = document.getElementById('s-name').value.trim();
+    if (!name) { showToast('Please enter a seedling name'); return; }
+    const seed = { name, parent:document.getElementById('s-parent').value.trim(), source:document.getElementById('s-source').value, germdate:document.getElementById('s-germdate').value, stage:document.getElementById('s-stage').value, notes:document.getElementById('s-notes').value.trim(), timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+    const docRef = await dbAdd('seeds', seed);
+    allSeeds.unshift({ id:docRef.id, ...seed });
+    await dbSaveLocal('seeds', allSeeds);
+    renderSeedsTab(); closeModal('seed-modal'); showToast('Seedling added!');
+  };
+
+  window.openEditSeed = (id) => {
+    const s = allSeeds.find(s=>s.id===id); if (!s) return;
+    document.getElementById('es-id').value=id;
+    document.getElementById('es-name').value=s.name||'';
+    document.getElementById('es-parent').value=s.parent||'';
+    document.getElementById('es-source').value=s.source||'saved';
+    document.getElementById('es-germdate').value=s.germdate||'';
+    document.getElementById('es-stage').value=s.stage||'germinated';
+    document.getElementById('es-notes').value=s.notes||'';
+    openModal('edit-seed-modal');
+  };
+
+  window.updateSeed = async () => {
+    const id = document.getElementById('es-id').value;
+    const updates = { name:document.getElementById('es-name').value.trim(), parent:document.getElementById('es-parent').value.trim(), source:document.getElementById('es-source').value, germdate:document.getElementById('es-germdate').value, stage:document.getElementById('es-stage').value, notes:document.getElementById('es-notes').value.trim() };
+    await dbUpdate('seeds', id, updates);
+    const idx = allSeeds.findIndex(s=>s.id===id);
+    if (idx>-1) allSeeds[idx]={...allSeeds[idx],...updates};
+    await dbSaveLocal('seeds', allSeeds);
+    renderSeedsTab(); closeModal('edit-seed-modal'); showToast('Seedling updated!');
+  };
+
+  window.handlePhotoUpload = (event) => {
+    const file = event.target.files[0]; if (!file) return;
+    pendingPhotoFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('photo-preview').src=e.target.result;
+      document.getElementById('p-variety').value='';
+      document.getElementById('p-notes').value='';
+      openModal('photo-modal');
+    };
+    reader.readAsDataURL(file);
+    event.target.value='';
+  };
+
+  window.savePhoto = async () => {
+    if (!pendingPhotoFile) return;
+    const variety = document.getElementById('p-variety').value.trim()||'Unknown';
+    const notes = document.getElementById('p-notes').value.trim();
+    const month = new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    showToast('Saving\u2026');
+    try {
+      let url, fname;
+      if (IS_LOCAL) {
+        url = await new Promise(res => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(pendingPhotoFile); });
+        fname = null;
+      } else {
+        fname = `${currentUser.uid}/${Date.now()}_${variety.replace(/\s/g,'_')}.jpg`;
+        const storageRef = ref(storage, fname);
+        await uploadBytes(storageRef, pendingPhotoFile);
+        url = await getDownloadURL(storageRef);
+      }
+      const photo = { url, variety, notes:notes||null, month, filename:fname, timestamp:IS_LOCAL ? new Date().toISOString() : Timestamp.now() };
+      const docRef = await dbAdd('photos', photo);
+      allPhotos.unshift({ id:docRef.id, ...photo });
+      await dbSaveLocal('photos', allPhotos);
+      renderPhotosTab(); closeModal('photo-modal'); showToast('Photo saved!');
+    } catch(e) { showToast('Upload failed.'); }
+    pendingPhotoFile = null;
+  };
+
+  window.confirmDelete = (type, id, label) => {
+    document.getElementById('confirm-msg').textContent = `\u201c${label}\u201d will be permanently deleted. This can\u2019t be undone.`;
+    pendingConfirmFn = () => executeDelete(type, id);
+    document.getElementById('confirm-overlay').classList.add('open');
+  };
+
+  window.confirmDeleteFromModal = (type, idFieldId, nameFieldId, modalId) => {
+    const id = document.getElementById(idFieldId).value;
+    const name = document.getElementById(nameFieldId).value;
+    closeModal(modalId);
+    confirmDelete(type, id, name);
+  };
+
+  window.closeConfirm = () => { document.getElementById('confirm-overlay').classList.remove('open'); pendingConfirmFn=null; };
+  window.executeConfirm = () => { if(pendingConfirmFn) pendingConfirmFn(); closeConfirm(); };
+
+  async function executeDelete(type, id) {
+    try {
+      if (type==='entry') {
+        await dbDelete('entries', id);
+        allEntries=allEntries.filter(e=>e.id!==id);
+        await dbSaveLocal('entries', allEntries);
+        renderHarvestTab();
+      } else if (type==='variety') {
+        await dbDelete('varieties', id);
+        allVarieties=allVarieties.filter(v=>v.id!==id);
+        await dbSaveLocal('varieties', allVarieties);
+        renderVarietiesTab(); updateVarietyDatalist();
+      } else if (type==='seed') {
+        await dbDelete('seeds', id);
+        allSeeds=allSeeds.filter(s=>s.id!==id);
+        await dbSaveLocal('seeds', allSeeds);
+        renderSeedsTab();
+      } else if (type==='photo') {
+        const photo = allPhotos.find(p=>p.id===id);
+        if (!IS_LOCAL && photo?.filename) { try { await deleteObject(ref(storage,photo.filename)); } catch(e) {} }
+        await dbDelete('photos', id);
+        allPhotos=allPhotos.filter(p=>p.id!==id);
+        await dbSaveLocal('photos', allPhotos);
+        renderPhotosTab();
+      }
+      showToast('Deleted.');
+    } catch(e) { showToast('Delete failed. Please try again.'); }
+  }
+
+  window.exportCSV = () => {
+    if (!allEntries.length) { showToast('No entries to export'); return; }
+    const rows = [['date','time','variety','stems','notes','health_flag','raw_transcript']];
+    allEntries.forEach(e => {
+      const ts = e.timestamp?.toDate?.() || new Date(e.timestamp);
+      rows.push([ts.toLocaleDateString('en-US'), ts.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}), e.variety||'', e.stems||0, e.notes||'', e.health_flag||'', e.raw_transcript||'']);
+    });
+    const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download = `bent-birch-harvest-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+  };
+
+  window.showTab = (name) => {
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',['harvest','varieties','photos','seeds'][i]===name));
+    document.getElementById('tab-'+name).classList.add('active');
+  };
+
+  window.openModal = (id) => document.getElementById(id).classList.add('open');
+  window.closeModal = (id,event) => { if(!event||event.target.id===id) document.getElementById(id).classList.remove('open'); };
+  window.openFAB = () => openModal('fab-modal');
+  window.closeFABModal = (event) => closeModal('fab-modal',event);
+  window.openHarvestModal = () => { updateVarietyDatalist(); openModal('harvest-modal'); };
+  window.openVarietyModal = () => {
+    ['v-name','v-color','v-height','v-source','v-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('v-form').value = '';
+    document.getElementById('v-size').value = '';
+    document.getElementById('v-tubers').value = 0;
+    document.getElementById('v-plants').value = 0;
+    document.getElementById('autofill-text').textContent = 'Look up';
+    openModal('variety-modal');
+  };
+
+  window.showToast = (msg) => {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2800);
+  };
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>

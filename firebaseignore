@@ -1,0 +1,5 @@
+# Never deploy these to Firebase
+server.js
+.env
+.env.*
+node_modules

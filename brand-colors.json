@@ -1,0 +1,26 @@
+{
+  "brand": "Bent Birch Blooms",
+  "colors": {
+    "oatmeal":       { "hex": "#ffecd5", "rgb": "255,236,213", "cmyk": "0,7,16,0" },
+    "blossom":       { "hex": "#cfa39b", "rgb": "207,163,155", "cmyk": "18,38,33,0" },
+    "peach":         { "hex": "#f8a693", "rgb": "248,166,147", "cmyk": "0,42,36,0" },
+    "butter":        { "hex": "#fadc98", "rgb": "250,220,152", "cmyk": "2,12,46,0" },
+    "late_summer_bloom": { "hex": "#f36f46", "rgb": "243,111,70",  "cmyk": "0,71,78,0" },
+    "cranberry":     { "hex": "#672e2d", "rgb": "103,46,45",   "cmyk": "38,82,71,47", "note": "hex corrected from PDF typo using RGB values" },
+    "oceanside":     { "hex": "#2c454e", "rgb": "44,69,78",    "cmyk": "82,60,53,40" },
+    "blue_sky":      { "hex": "#c0e6f0", "rgb": "192,230,240", "cmyk": "23,0,4,0" },
+    "spritz":        { "hex": "#fcbe8b", "rgb": "252,190,139", "cmyk": "0,29,48,0" }
+  },
+  "notes": {
+    "primary_warm":   ["oatmeal", "peach", "spritz", "blossom"],
+    "primary_accent": ["late_summer_bloom", "cranberry"],
+    "secondary":      ["butter", "blue_sky", "oceanside"],
+    "app_ui_mapping": {
+      "background":   "oatmeal (#ffecd5)",
+      "surface":      "warm white (close to oatmeal)",
+      "primary_cta":  "late_summer_bloom (#f36f46)",
+      "text":         "cranberry-dark",
+      "accent":       "blossom (#cfa39b)"
+    }
+  }
+}
