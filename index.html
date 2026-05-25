@@ -6,7 +6,7 @@
   <title>Bent Birch Blooms</title>
   <meta name="description" content="Farm tracker for Bent Birch Blooms dahlia farm">
   <meta name="theme-color" content="#ffecd5">
-  <meta name="app-version" content="v3.14">
+  <meta name="app-version" content="v3.15">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Bent Birch">
@@ -973,6 +973,7 @@ async function lookupVarietyInfo(name) {
       .filter(c => c.type === 'text')
       .map(c => c.text)
       .join('');
+    alert(fullText); // temporary debug
     const jsonMatch = fullText.match(/\{[\s\S]*?\}/);
     if (!jsonMatch) return {};
     return JSON.parse(jsonMatch[0]);
