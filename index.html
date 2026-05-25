@@ -955,23 +955,32 @@
     return data.content.map(c=>c.text||'').join('').trim().replace(/```json|```/g,'').trim();
   }
 
-  async function lookupVarietyInfo(name) {
-    try {
-      const res = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 500,
-          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-          messages: [{ role: 'user', content: `Search for the dahlia variety "${name}" and return its ADS classification data. Return ONLY valid JSON (no markdown): {"form":"string or null","size":"string or null","height":"string or null","color":"string or null","notes":"string or null"}. Form must be one of: Ball, Cactus, Decorative, Formal Decorative, Informal Decorative, Dinner Plate, Pompon, Waterlily, Anemone, Collarette, Single, Other, or null. Size MUST be expressed as an inch range e.g. "4-6 inches" or "6 inches" — do NOT use words like small/medium/large. Height example: "4-5 ft". Color: plain English description.` }]
-        })
-      });
-      const data = await res.json();
-      const text = data.content.filter(c => c.type === 'text').map(c => c.text).join('').trim().replace(/```json|```/g,'').trim();
-      return JSON.parse(text);
-    } catch(e) { return {}; }
+async function lookupVarietyInfo(name) {
+  try {
+    const res = await fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        system: 'You are a dahlia variety database. Always respond with ONLY a valid JSON object — no markdown, no explanation, no preamble.',
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: `Search for the dahlia variety "${name}" and return its ADS classification data as JSON: {"form":"string or null","size":"string or null","height":"string or null","color":"string or null","notes":"string or null"}. Form must be one of: Ball, Cactus, Formal Decorative, Informal Decorative, Semi-Cactus, Straight Cactus, Laciniated, Miniature Ball, Pompon, Stellar, Waterlily, Novelty Fully Double, Peony, Anemone, Novelty Open, Collarette, Orchid, Orchette, Single, Mignon Single, Other, or null. Size as inch range e.g. "4-6 inches". Height e.g. "4-5 ft". Color in plain English.` }]
+      })
+    });
+    const data = await res.json();
+    const fullText = data.content
+      .filter(c => c.type === 'text')
+      .map(c => c.text)
+      .join('');
+    const jsonMatch = fullText.match(/\{[\s\S]*?\}/);
+    if (!jsonMatch) return {};
+    return JSON.parse(jsonMatch[0]);
+  } catch(e) {
+    console.error('lookupVarietyInfo failed:', e);
+    return {};
   }
+}
 
   function stemWord(word) {
     // Basic plural/possessive stemming for variety name matching
